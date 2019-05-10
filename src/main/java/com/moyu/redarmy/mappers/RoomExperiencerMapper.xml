@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moyu.redarmy.mappers.RoomExperiencerMapper">
+
+    <select id="selectByDeviceId" resultType="map">
+      select re.id,re.device_id as deviceId,
+      re.room_id as roomId,
+      r.leader_id as leaderId
+      from RoomExperiencer re
+      left join Room r on re.room_id=r.id
+      where re.device_id=#{deviceId}
+    </select>
+
+    <select id="selectExperiencerCount" resultType="int">
+        SELECT COUNT(0) from RoomExperiencer where device_id=#{deviceId}
+    </select>
+
+    <insert id="insertExperiencer"
+            parameterType="com.moyu.redarmy.model.RoomExperiencer"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        insert into RoomExperiencer (device_id,room_id)
+        values(#{deviceId},#{roomId})
+    </insert>
+
+    <insert id="batchInsertExperiencer"
+            parameterType="com.moyu.redarmy.model.RoomExperiencer"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        insert into RoomExperiencer (device_id,room_id) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.deviceId},#{item.roomId})
+        </foreach>
+    </insert>
+    <delete id="deleteExperiencer">
+      delete from RoomExperiencer where device_id=#{deviceId}
+    </delete>
+    <delete id="deleteRoomAllExperiencer">
+      delete from RoomExperiencer where room_id=#{roomId}
+    </delete>
+</mapper>

@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Class-Path: mysql-connector-java-8.0.13.jar spring-context-5.1.3.RELEA
+ SE.jar jedis-2.9.0.jar netty-common-4.1.31.Final.jar spring-beans-5.1
+ .3.RELEASE.jar spring-boot-starter-2.1.1.RELEASE.jar jackson-annotati
+ ons-2.9.0.jar netty-socketio-1.7.16.jar spring-boot-starter-jdbc-2.1.
+ 1.RELEASE.jar fastjson-1.2.54.jar jackson-databind-2.9.7.jar netty-tr
+ ansport-native-unix-common-4.1.31.Final.jar classmate-1.4.0.jar logba
+ ck-classic-1.2.3.jar mybatis-spring-1.3.2.jar spring-webmvc-5.1.3.REL
+ EASE.jar logback-core-1.2.3.jar commons-pool2-2.6.0.jar netty-handler
+ -4.1.31.Final.jar spring-boot-starter-data-redis-1.5.2.RELEASE.jar sn
+ akeyaml-1.23.jar spring-boot-starter-web-2.1.1.RELEASE.jar spring-web
+ -5.1.3.RELEASE.jar netty-transport-native-epoll-4.1.31.Final.jar jbos
+ s-logging-3.3.2.Final.jar jul-to-slf4j-1.7.25.jar spring-aop-5.1.3.RE
+ LEASE.jar jackson-datatype-jdk8-2.9.7.jar mybatis-spring-boot-autocon
+ figure-1.3.2.jar tomcat-embed-websocket-9.0.13.jar netty-buffer-4.1.3
+ 1.Final.jar spring-boot-autoconfigure-2.1.1.RELEASE.jar jackson-core-
+ 2.9.7.jar ant-launcher-1.10.5.jar spring-tx-5.1.3.RELEASE.jar jackson
+ -module-parameter-names-2.9.7.jar spring-data-keyvalue-2.1.3.RELEASE.
+ jar HikariCP-3.2.0.jar spring-oxm-5.1.3.RELEASE.jar spring-boot-start
+ er-tomcat-2.1.1.RELEASE.jar javax.annotation-api-1.3.2.jar spring-cor
+ e-5.1.3.RELEASE.jar spring-boot-starter-json-2.1.1.RELEASE.jar ant-1.
+ 10.5.jar spring-jdbc-5.1.3.RELEASE.jar tomcat-embed-el-9.0.13.jar spr
+ ing-boot-starter-logging-2.1.1.RELEASE.jar spring-context-support-5.1
+ .3.RELEASE.jar netty-codec-http-4.1.31.Final.jar tomcat-embed-core-9.
+ 0.13.jar spring-data-redis-2.1.3.RELEASE.jar jackson-datatype-jsr310-
+ 2.9.7.jar spring-jcl-5.1.3.RELEASE.jar netty-codec-4.1.31.Final.jar l
+ og4j-api-2.11.1.jar netty-resolver-4.1.31.Final.jar validation-api-2.
+ 0.1.Final.jar mybatis-spring-boot-starter-1.3.2.jar slf4j-api-1.7.25.
+ jar spring-boot-devtools-2.1.1.RELEASE.jar spring-expression-5.1.3.RE
+ LEASE.jar hibernate-validator-6.0.13.Final.jar log4j-to-slf4j-2.11.1.
+ jar netty-transport-4.1.31.Final.jar spring-boot-2.1.1.RELEASE.jar sp
+ ring-data-commons-2.1.3.RELEASE.jar mybatis-3.4.6.jar
+Main-Class: com.moyu.redarmy.RedArmyApplication
+

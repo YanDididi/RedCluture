@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moyu.redarmy.mappers.VersionMapper">
+    <insert id="insertVersion"
+            parameterType="com.moyu.redarmy.model.Version"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        insert into version (resource_id,version_name,`desc`,status,path,create_time,update_time)
+        values(#{resourceId},#{versionName},#{desc},#{status},#{path},#{createTime},#{updateTime})
+    </insert>
+    <select id="selectResourceListLatestVersion" resultType="Version">
+        select id,version_name as versionName,path,resource_id as resourceId,`desc`,create_time as createTime,
+        update_time as updateTime,`status`
+        from version where id in (select v.id from(select id from version
+        where resource_id in
+        <foreach collection="list" item="item" index="index"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY id desc limit 1) as v)
+    </select>
+
+
+</mapper>

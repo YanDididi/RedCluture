@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moyu.redarmy.mappers.ScreenMapper">
+    <select id="selectScreen" resultType="com.moyu.redarmy.model.Screen">
+        select s.id,
+        s.device_id as deviceId,
+        s.cover_img as coverImg,
+        s.create_time as createTime,
+        s.expiry_time as expiryTime
+        from Screen s
+        where s.device_id=#{deviceId}
+    </select>
+    <delete id="deleteScreen" parameterType="Integer">
+      delete from Screen where device_id=#{deviceId}
+    </delete>
+
+    <insert id="insertScreen"
+            parameterType="com.moyu.redarmy.model.Screen"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        insert into Screen
+        (device_id,cover_img,create_time,expiry_time)
+        values
+        (#{deviceId},#{coverImg},#{createTime},#{expiryTime})
+    </insert>
+
+    <select id="selectScreenLis" resultType="com.moyu.redarmy.model.Screen">
+        select s.id,
+        s.device_id as deviceId,
+        s.cover_img as coverImg,
+        s.create_time as createTime,
+        s.expiry_time as expiryTime
+        from Screen s
+        where s.device_id in
+        <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        and s.expiry_time >= unix_timestamp(now());
+   </select>
+
+</mapper>

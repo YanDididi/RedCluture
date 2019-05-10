@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moyu.redarmy.mappers.SyncResourceMapper">
+
+    <insert id="insertSyncResourceLis"
+            parameterType="com.moyu.redarmy.model.SyncResource"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        insert into syncresource (`name`,status,create_time,update_time,`desc`,category_id,md5,path)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.name},#{item.status},#{item.createTime},#{item.updateTime},#{item.desc},#{item.categoryId},#{item.md5},#{item.path})
+        </foreach>
+    </insert>
+
+    <select id="getSyncResourceList" resultType="SyncResource">
+        select sr.id,sr.name,sr.status,
+        sr.create_time as createTime,
+        sr.update_time as updateTime,
+        sr.desc,
+        sr.category_id as categoryId,
+        sr.md5,sr.path,sr.syncversion_id as syncversionId
+        from syncresource sr where 1=1
+        <if test="syncVersionId!=-1">
+            and syncversion_id=#{syncVersionId}
+        </if>
+        <if test="status!=-1">
+            and status=#{status}
+        </if>
+    </select>
+
+
+    <delete id="delteSyncResourceByMd5">
+        delete from SyncResource
+        where md5 in
+        <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+            #{item.md5}
+        </foreach>
+    </delete>
+
+</mapper>

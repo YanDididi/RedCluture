@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moyu.redarmy.mappers.SyncVersionMapper">
+
+    <insert id="insertSyncVersion"
+            parameterType="com.moyu.redarmy.model.SyncVersion"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        insert into syncversion (`desc`,create_time,update_time,status)
+        values(#{desc},#{createTime},#{updateTime},#{status})
+    </insert>
+
+</mapper>

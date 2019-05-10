@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moyu.redarmy.mappers.DeviceMapper">
+
+    <select id="getLastNumber" resultType="java.lang.String">
+        select d.number
+        from Device d
+        where d.number LIKE CONCAT('%','E','%')
+        ORDER BY d.number DESC LIMIT 1
+    </select>
+
+    <select id="isLeader" resultType="java.lang.String">
+        select count(*) from room where leader_id =#{deviceId}
+    </select>
+
+
+    <select id="selectDevice" resultMap="deviceResult">
+        select Device.id, Device.imei,Device.`type`,Device.`number`,Device.status,
+        Device.create_time as 'createTime',
+        Device.update_time as 'updateTime',
+        Company.name,
+        Company.id as 'companyId',
+        Company.status as 'companyStatus'
+        from Device
+        left join Company on Device.company_id=Company.id
+        where Device.id = #{id}
+    </select>
+
+    <select id="selectLeadIdByExpId" resultType="Integer">
+        select r.leader_id
+        from roomexperiencer rp
+        left join room r on rp.room_id=r.id
+        where rp.device_id = #{expId}
+    </select>
+
+    <select id="selectDevices" resultMap="deviceResult">
+        select Device.id, Device.imei,Device.`type`,Device.`number`,Device.status,
+        Device.create_time as 'createTime',
+        Device.update_time as 'updateTime',
+        Company.name,
+        Company.id as 'companyId',
+        Company.status as 'companyStatus'
+        from Device
+        left join Company on Device.company_id=Company.id
+        where 1 = 1
+        <if test="companyId!=-1">
+            and Device.company_id=#{companyId}
+        </if>
+        <if test="type!=-1">
+            and Device.type=#{type}
+        </if>
+        <if test="status!=-1">
+            and Device.status=#{status}
+        </if>
+
+    </select>
+
+    <select id="selectDevicesDetails" resultType="map">
+        select d.id,d.number,re.room_id as roomId,
+        r.leader_id as leaderId,
+        r.resource_id as resourceId,
+        rs.cover_img as coverImg from Device d
+        left join RoomExperiencer re on d.id=re.device_id
+        left join Room r on re.room_id=r.id
+        left join Resource rs on r.resource_id=rs.id
+        where 1=1
+        <if test="companyId!=-1">
+            and d.company_id=#{companyId}
+        </if>
+        <if test="type!=-1">
+            and d.type=#{type}
+        </if>
+        <if test="status!=-1">
+            and d.`status`=#{status}
+        </if>
+    </select>
+
+    <select id="selectDeviceByImei" resultMap="deviceResult">
+         select Device.id, Device.imei,Device.`type`,Device.`number`,Device.status,
+        Device.create_time as 'createTime',
+        Device.update_time as 'updateTime',
+        Company.name,
+        Company.id as 'companyId',
+        Company.status as 'companyStatus'
+        from Device
+        left join Company on Device.company_id=Company.id
+        where Device.imei = #{imei}
+    </select>
+    <insert id="insertDevice"
+            parameterType="com.moyu.redarmy.model.Device"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        insert into Device (imei,`type`,`number`,status,company_id,create_time,update_time)
+        values(#{imei},#{type},#{number},#{status},#{companyId},#{createTime},#{updateTime})
+    </insert>
+    <update id="updateDevice"
+            parameterType="Device"
+            flushCache="true">
+        update Device set
+          imei=#{imei},
+          `type`=#{type},
+          `number`=#{number},
+          status=#{status},
+          company_id=#{companyId},
+          update_time=#{updateTime}
+          where id=#{id}
+    </update>
+    <delete id="deleteDevice">
+        delete from Device where id=#{id}
+    </delete>
+    <resultMap id="deviceResult" type="Device">
+        <id property="id" column="id"/>
+        <result property="imei" column="imei"/>
+        <result property="type" column="type"/>
+        <result property="number" column="number"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="companyId" column="companyId"/>
+        <association property="company" javaType="Company">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+            <result property="status" column="companyStatus"/>
+        </association>
+    </resultMap>
+
+
+</mapper>

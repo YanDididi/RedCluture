@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moyu.redarmy.mappers.RoomMapper">
+    <select id="selectRoomCount" resultType="int">
+        SELECT COUNT(0) from Room where leader_id=#{leaderId}
+    </select>
+    <select id="selectRoom" resultMap="roomExperiencerResult">
+        SELECT Room.*,
+        Device.id as deviceId,
+        Device.number as deviceNumber,
+        leader.id as l_id,
+        leader.number as l_num,
+        rs.id as rs_id,
+        rs.name as rs_name,
+        rs.status as rs_status,
+        rs.cover_img as rs_cover_img,
+        rs.create_time as rs_create_time,
+        rs.update_time as rs_update_time
+        from Room
+        left join RoomExperiencer on Room.id=RoomExperiencer.room_id
+        left join Device on Device.id=RoomExperiencer.device_id
+        left join Device leader on leader.id=Room.leader_id
+        left join Resource rs on rs.id=Room.resource_id
+        where Room.id=#{roomId}
+    </select>
+
+    <select id="selectRoomByLeaderId" resultMap="roomExperiencerResult">
+        SELECT Room.*
+        from Room
+        where Room.leader_id=#{leaderId}
+    </select>
+
+    <select id="selectRooms" resultMap="roomResult">
+        select Room.id,Room.name,
+        Room.leader_id as leaderId,
+        Room.company_id as companyId,
+        Room.status,
+        Room.resource_id as resourceId,
+        Room.create_time as createTime,
+        Device.id as deviceId,
+        Device.number as leaderNum,
+        rs.id as rs_id,
+        rs.name as rs_name,
+        rs.status as rs_status,
+        rs.cover_img as rs_cover_img,
+        rs.create_time as rs_create_time,
+        rs.update_time as rs_update_time
+        from Room
+        left join Device on Room.leader_id=Device.id
+        left join Resource rs on rs.id=Room.resource_id
+        where Room.company_id=#{companyId}
+        <if test="status!=-1">
+          and Room.status=#{status}
+        </if>
+    </select>
+
+    <select id="selectRoomsAndExperiencer" resultMap="roomExperiencerResult">
+        SELECT Room.*,
+        Device.id as deviceId,
+        Device.number as deviceNumber,
+        leader.id as l_id,
+        leader.number as l_num,
+        rs.id as rs_id,
+        rs.name as rs_name,
+        rs.status as rs_status,
+        rs.cover_img as rs_cover_img,
+        rs.create_time as rs_create_time,
+        rs.update_time as rs_update_time
+        from Room
+        left join RoomExperiencer on Room.id=RoomExperiencer.room_id
+        left join Device on Device.id=RoomExperiencer.device_id
+        left join Device leader on leader.id=Room.leader_id
+        left join Resource rs on rs.id=Room.resource_id
+        where Room.company_id=#{companyId}
+    </select>
+
+    <insert id="insertRoom"
+            parameterType="com.moyu.redarmy.model.Room"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        insert into Room (`name`,leader_id,status,company_id,resource_id,create_time,update_time)
+        values(#{name},#{leaderId},#{status},#{companyId},#{resourceId},#{createTime},#{updateTime})
+    </insert>
+
+    <update id="updateRoom"
+            parameterType="com.moyu.redarmy.model.Room">
+      update Room set
+      resource_id=#{resoureId},
+      update_time=#{updateTime}
+      where id=#{id}
+    </update>
+
+    <update id="updateRoomStatus">
+        update Room set
+        status=#{status}
+        where id in
+        <foreach collection="roomIds" item="item" index="index"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <delete id="deleteRoomByLeaderId">
+        delete from Room where leader_id=#{leaderId}
+    </delete>
+
+    <delete id="deleteRoom">
+        delete from Room where id=#{id}
+    </delete>
+
+    <resultMap id="roomResult" type="Room">
+        <id property="id" column="id"></id>
+        <result property="leaderId" column="leaderId"/>
+        <result property="companyId" column="companyId"/>
+        <result property="status" column="status"/>
+        <result property="resourceId" column="resourceId"/>
+        <result property="createTime" column="createTime"/>
+        <association property="leader" column="deviceId" javaType="Device" resultMap="deviceResult"/>
+        <association property="resource" column="rs_resource_id" javaType="Resource" resultMap="resourceResult"/>
+    </resultMap>
+
+    <resultMap id="deviceResult" type="Device">
+        <id property="id" column="deviceId"/>
+        <result property="number" column="leaderNum"/>
+    </resultMap>
+    <resultMap id="resourceResult" type="Resource">
+        <id property="id" column="rs_id"/>
+        <result property="name" column="rs_name"/>
+        <result property="status" column="rs_status"/>
+        <result property="coverImg" column="rs_cover_img"/>
+        <result property="createTime" column="rs_create_time"/>
+    </resultMap>
+
+    <resultMap id="roomExperiencerResult" type="Room">
+        <id property="id" column="id"></id>
+        <result property="leaderId" column="leader_id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="status" column="status"/>
+        <result property="resourceId" column="resource_id"/>
+        <result property="createTime" column="create_time"/>
+        <association property="leader" javaType="Device">
+            <id property="id" column="l_id"/>
+            <result property="number" column="l_num"/>
+        </association>
+        <association property="resource" column="rs_resource_id" javaType="Resource" resultMap="resourceResult"/>
+
+        <collection property="experiencers" ofType="Device">
+            <id property="id" column="deviceId"/>
+            <result property="number" column="deviceNumber"/>
+        </collection>
+
+    </resultMap>
+</mapper>
